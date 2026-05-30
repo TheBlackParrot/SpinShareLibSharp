@@ -1,17 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SpinShareLib;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SpinShareLib;
+using SpinShareLib.Types;
 
-namespace SpinShareLib.Tests
+namespace SpinShareLibTests
 {
-    [TestClass()]
+    [TestClass]
     public class SSAPITests
     {
         private readonly SSAPI _inst;
@@ -20,56 +19,56 @@ namespace SpinShareLib.Tests
             _inst = new SSAPI();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void getPing()
         {
             Task.Run(async () => {
-               var thing = await _inst.ping();
+               Content thing = await _inst.ping();
                Console.WriteLine(thing.status);
             }).GetAwaiter().GetResult();
             
         }
-        [TestMethod()]
+        [TestMethod]
         public void getPromos()
         {
             Task.Run(async () => {
-                var thing = await _inst.getPromos();
+                Content<Promo[]> thing = await _inst.getPromos();
                 Console.WriteLine(thing.data[0].button.data);
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void getNewSongs()
         {
             Task.Run(async () => {
-                var thing = await _inst.getNewSongs(0);
+                Content<Song[]> thing = await _inst.getNewSongs(0);
                 Console.WriteLine(thing.data[0].id);
             }).GetAwaiter().GetResult();
 
         }
-        [TestMethod()]
+        [TestMethod]
         public void getHotThisWeekSongs()
         {
             Task.Run(async () => {
-                var thing = await _inst.getHotThisWeekSongs(0);
+                Content<Song[]> thing = await _inst.getHotThisWeekSongs(0);
                 Console.WriteLine(thing.data[0].id);
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void getSongDetail()
         {
             Task.Run(async () => {
-                var thing = await _inst.getSongDetail("1234");
+                Content<SongDetail> thing = await _inst.getSongDetail("1234");
                 thing.data.tags.ToList().ForEach(i => Console.WriteLine(i.ToString()));
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void downloadSongZip()
         {
             Task.Run(async () => {
                 await _inst.downloadSongZip("1234", Path.Combine(Path.GetTempPath()));
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void downloadSongAndUnzip()
         {
             Task.Run(async () => {
@@ -77,10 +76,10 @@ namespace SpinShareLib.Tests
                 await _inst.downloadSongAndUnzip("1234", Path.Combine(Path.GetTempPath()));
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void downloadSongAndUnzipAddToQueue()
         {
-            var watch = new System.Diagnostics.Stopwatch();
+            Stopwatch watch = new Stopwatch();
             Task.Run(async () => {
                 watch.Start();
                 await _inst.downloadSongAndUnzipAddToQueue("1234", Path.Combine(Path.GetTempPath()));
@@ -89,103 +88,102 @@ namespace SpinShareLib.Tests
                 await _inst.downloadSongAndUnzipAddToQueue("10", Path.Combine(Path.GetTempPath()));
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void getSongDetailReviews()
         {
             Task.Run(async () => {
-                var thing = await _inst.getSongDetailReviews("1234");
+                Content<Reviews> thing = await _inst.getSongDetailReviews("1234");
                 Console.WriteLine(thing.data.reviews[0]);
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void getSongDetailSpinPlays()
         {
             Task.Run(async () => {
-                var thing = await _inst.getSongDetailSpinPlays("1234");
+                Content<SpinPlays> thing = await _inst.getSongDetailSpinPlays("1234");
                 Console.WriteLine(thing.data.spinPlays[0].videoUrl);
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void getPlaylist()
         {
             Task.Run(async () => {
-                var thing = await _inst.getPlaylist("10");
+                Content<Playlist> thing = await _inst.getPlaylist("10");
                 Console.WriteLine(thing.data.user.username);
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void getUserDetail()
         {
             Task.Run(async () => {
-                var thing = await _inst.getUserDetail("72");
+                Content<UserDetail> thing = await _inst.getUserDetail("72");
                 Console.WriteLine(thing.data.username);
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void getUserCharts()
         {
             Task.Run(async () => {
-                var thing = await _inst.getUserCharts("72");
+                Content<Song[]> thing = await _inst.getUserCharts("72");
                 Console.WriteLine(thing.data[0].title);
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void getUserReviews()
         {
             Task.Run(async () => {
-                var thing = await _inst.getUserReviews("72");
+                Content<Reviews.Review[]> thing = await _inst.getUserReviews("72");
                 Console.WriteLine(thing.data[0].id);
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void getUserSpinPlays()
         {
             Task.Run(async () => {
-                var thing = await _inst.getUserSpinPlays("20");
+                Content<SpinPlays.Spinplay[]> thing = await _inst.getUserSpinPlays("20");
                 Console.WriteLine(thing.data[0].id);
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void getUserPlaylists()
         {
             Task.Run(async () => {
-                var thing = await _inst.getUserPlaylists("278");
+                Content<Playlist[]> thing = await _inst.getUserPlaylists("278");
                 Console.WriteLine(thing.data[0].id);
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void getSearch()
         {
             Task.Run(async () => {
-                var thing = await _inst.search("ayanamy");
+                Content<Search> thing = await _inst.search("ayanamy");
                 Console.WriteLine(thing.data.users[0].id);
             }).GetAwaiter().GetResult();
         }
     }
     
-    [TestClass()]
+    [TestClass]
     public class SSAPILargeTests {
-        private readonly HttpClient _client;
         private readonly SSAPI _inst;
         public SSAPILargeTests()
         {
-            _client = new HttpClient();
-            _inst = new SSAPI(_client);
+            HttpClient client = new HttpClient();
+            _inst = new SSAPI(client);
         }
         
-        [TestMethod()]
+        [TestMethod]
         public void getTournamentMapPool()
         {
             Task.Run(async () => {
-                var thing = await _inst.getTournamentMapPool();
+                Content<SongDetailTournament[]> thing = await _inst.getTournamentMapPool();
                 thing.data[32].tags.ToList().ForEach(i => Console.WriteLine(i.ToString()));
             }).GetAwaiter().GetResult();
         }
-        [TestMethod()]
+        [TestMethod]
         public void searchAll()
         {
             Task.Run(async () => {
-                var thing = await _inst.searchAll();
+                Content<Search> thing = await _inst.searchAll();
                 Console.WriteLine(thing.data.songs.Length);
             }).GetAwaiter().GetResult();
         }

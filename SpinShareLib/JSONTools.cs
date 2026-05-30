@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace SpinShareLib
 {
-    class DateTimeParse : JsonConverter<DateTime>
+    internal class DateTimeParse : JsonConverter<DateTime>
     {
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -19,7 +18,7 @@ namespace SpinShareLib
         }
     }
 
-    class StrObjectToArr : JsonConverter<string[]>
+    internal class StrObjectToArr : JsonConverter<string[]>
     {
         public override string[] Read(
             ref Utf8JsonReader reader,
@@ -31,6 +30,7 @@ namespace SpinShareLib
             {
                 while (reader.Read())
                 {
+                    // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
                     switch (reader.TokenType)
                     {
                         case JsonTokenType.EndObject:
@@ -38,12 +38,10 @@ namespace SpinShareLib
                             return returnArr.ToArray();
                         case JsonTokenType.PropertyName:
                             reader.Read();
-                            returnArr.Add(reader.GetString());
-                            break;
-                        default:
-                            returnArr.Add(reader.GetString());
                             break;
                     }
+
+                    returnArr.Add(reader.GetString());
                 }
             }
             throw new JsonException();

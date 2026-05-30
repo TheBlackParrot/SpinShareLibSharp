@@ -1,23 +1,25 @@
 using System;
 using System.Text.Json.Serialization;
-using System.Collections.Generic;
+// ReSharper disable UnassignedField.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable CollectionNeverQueried.Global
 
 namespace SpinShareLib 
 {
     namespace Types 
     {
-        public class Content
+        public abstract class Content
         {
             public int version;
             public int status;
         }
 
-        public class Content<T> : Content
+        public abstract class Content<T> : Content
         {
             public T data;
         }
 
-        public class Promo
+        public abstract class Promo
         {
             public int id;
             public string
@@ -28,14 +30,14 @@ namespace SpinShareLib
                 image_path;
             public bool isVisible;
             public Button button;
-            public class Button
+            public abstract class Button
             {
                 public int type;
                 public string data;
             }
         }
 
-        public class Song
+        public abstract class Song
         {
             public int id;
             public int? 
@@ -59,7 +61,7 @@ namespace SpinShareLib
                 cover,
                 zip;
         }
-        public class SongDetail : Song
+        public abstract class SongDetail : Song
         {
             public int?
                 uploader,
@@ -74,7 +76,7 @@ namespace SpinShareLib
             public Date uploadDate;
             public Date updateDate;
             public Paths paths;
-            public class Paths
+            public abstract class Paths
             {
                 public string
                     ogg,
@@ -82,15 +84,15 @@ namespace SpinShareLib
                     zip;
             }
         }
-        public class SongDetailTournament : SongDetail
+        public abstract class SongDetailTournament : SongDetail
         {
             public string srtbMD5;
         }
-        public class Reviews
+        public abstract class Reviews
         {
             public bool average;
             public Review[] reviews;
-            public class Review
+            public abstract class Review
             {
                 public int id;
                 public SongDetail song;
@@ -100,10 +102,10 @@ namespace SpinShareLib
                 public Date reviewDate;
             }
         }
-        public class SpinPlays
+        public abstract class SpinPlays
         {
             public Spinplay[] spinPlays;
-            public class Spinplay
+            public abstract class Spinplay
             {
                 public int id;
                 public User user;
@@ -115,7 +117,7 @@ namespace SpinShareLib
 
             }
         }
-        public class Playlist
+        public abstract class Playlist
         {
             public int id;
             public string
@@ -138,7 +140,7 @@ namespace SpinShareLib
                 username,
                 avatar;
         }
-        public class UserDetail : User
+        public abstract class UserDetail : User
         {
             public string pronouns;
             public int?
@@ -147,7 +149,7 @@ namespace SpinShareLib
                 reviews,
                 spinplay;
             public Card[] cards;
-            public class Card
+            public abstract class Card
             {
                 public int id;
                 public string
@@ -163,13 +165,13 @@ namespace SpinShareLib
             }
         }
 
-        public class Search
+        public abstract class Search
         {
             public Song[] songs;
             public User[] users;
         }
 
-        public class Date
+        public abstract class Date
         {
             public DateTime date;
             public string stimezone;

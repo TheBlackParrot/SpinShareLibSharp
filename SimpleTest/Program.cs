@@ -1,6 +1,7 @@
 ﻿using System;
 using SpinShareLib;
 using System.Threading.Tasks;
+using SpinShareLib.Types;
 
 namespace SimpleTest
 {
@@ -8,9 +9,9 @@ namespace SimpleTest
     {
         public static void Main(string[] args)
         {
-            var ssapi = new SSAPI();
+            SSAPI ssapi = new SSAPI();
             Task.Run(async () => {
-                var thing = await ssapi.ping();
+                Content thing = await ssapi.ping();
                 Console.WriteLine(thing.status);
             }).GetAwaiter().GetResult();
         }
