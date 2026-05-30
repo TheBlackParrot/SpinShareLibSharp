@@ -80,18 +80,11 @@ namespace SpinShareLib
         }
         public async Task<bool> downloadSongAndUnzip(string songId, string directoryPath)
         {
-            try
-            {
-                string tempFileName = Path.GetTempFileName();
-                await downloadSongZip(songId, tempFileName);
-                System.IO.Compression.ZipFile.ExtractToDirectory(tempFileName, directoryPath);
-                File.Delete(tempFileName);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            string tempFileName = Path.GetTempFileName();
+            await downloadSongZip(songId, tempFileName);
+            System.IO.Compression.ZipFile.ExtractToDirectory(tempFileName, directoryPath);
+            File.Delete(tempFileName);
+            return true;
         }
         public async Task<bool> downloadSongAndUnzipAddToQueue(string songId, string directoryPath)
         {
