@@ -33,7 +33,7 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="SpinShareLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="SpinShareLib">
           <HintPath>..\SpinShareLib\bin\Debug\SpinShareLib.dll</HintPath>
         </Reference>
         <Reference Include="System" />
