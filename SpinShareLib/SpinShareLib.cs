@@ -148,7 +148,7 @@ namespace SpinShareLib
         private async Task<T> getApiResultAsType<T>(string apiPath)
         {
             HttpResponseMessage resp = await client.GetAsync(apiPath);
-            if (resp.StatusCode == System.Net.HttpStatusCode.OK)
+            if (resp.IsSuccessStatusCode)
             {
                 JsonSerializerOptions options = new JsonSerializerOptions
                 {
@@ -159,8 +159,8 @@ namespace SpinShareLib
                 };
                 return JsonSerializer.Deserialize<T>(await resp.Content.ReadAsStringAsync(), options);
             }
-            
-            return default;
+
+            throw new HttpRequestException("Status code is not OK");
         }
     }
 }
