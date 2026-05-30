@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using SpinShareLib.Types;
@@ -26,6 +27,7 @@ namespace SpinShareLib
         {
             apiBase = "https://spinsha.re/api/";
             supportedVersion = 1;
+            client.DefaultRequestHeaders.UserAgent.ParseAdd($"Mozilla/5.0 (compatible; {nameof(SpinShareLib)}/{Assembly.GetExecutingAssembly().GetName().Version})");
             this.client = client;
             semaphore = new SemaphoreSlim(1);
         }
