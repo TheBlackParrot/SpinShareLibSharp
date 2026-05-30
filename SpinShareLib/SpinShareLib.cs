@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Reflection;
@@ -78,13 +79,55 @@ namespace SpinShareLib
                 return false;
             }
         }
-        public async Task<bool> downloadSongAndUnzip(string songId, string directoryPath)
+        
+        // ReSharper disable once MemberCanBePrivate.Global
+        public async Task<bool> downloadSongAndUnzip(string songId, string directoryPath, bool overwriteFiles)
         {
             string tempFileName = Path.GetTempFileName();
             await downloadSongZip(songId, tempFileName);
-            System.IO.Compression.ZipFile.ExtractToDirectory(tempFileName, directoryPath);
+            ZipArchive archive = ZipFile.OpenRead(tempFileName);
+            
+            foreach (ZipArchiveEntry entry in archive.Entries)
+            {
+                string uncompressedFilePath = Path.Combine(directoryPath, entry.FullName);
+
+                if (File.Exists(uncompressedFilePath))
+                {
+                    if (overwriteFiles)
+                    {
+                        // getting around some weird lock issue with ExtractToFile
+                        deleteOldFile:
+                            try
+                            {
+                                File.Delete(uncompressedFilePath);
+                            }
+                            catch (IOException e)
+                            {
+                                if (e.Message.StartsWith("Sharing violation"))
+                                {
+                                    await Task.Delay(100);
+                                    goto deleteOldFile;
+                                }
+                            }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
+                entry.ExtractToFile(uncompressedFilePath, false);
+            }
+            
+            archive.Dispose();
             File.Delete(tempFileName);
+            
             return true;
+        }
+        // < 1.0.3 compatibility
+        public async Task<bool> downloadSongAndUnzip(string songId, string directoryPath)
+        {
+            return await downloadSongAndUnzip(songId, directoryPath, true);
         }
         public async Task<bool> downloadSongAndUnzipAddToQueue(string songId, string directoryPath)
         {
